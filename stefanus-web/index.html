@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Keuangan Perpulungan Stefanus</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{--utama:#4b2a6e;--aksen:#b8922a;--latar:#faf6ec;--kartu:#fff;--teks:#2a2233;--redup:#6d6478;--garis:#e4dccb;--naik:#1f7a4d;--turun:#b3261e;--isi-utama:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root{--utama:#a98bd1;--aksen:#e0b84e;--latar:#17131d;--kartu:#221c2b;--teks:#f1ecf7;--redup:#a79bb5;--garis:#3a3147;--naik:#5fd09b;--turun:#ff8a80;--isi-utama:#17131d}}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--latar);color:var(--teks);font:16px/1.5 Georgia,"Times New Roman",serif}
+header{background:var(--utama);color:var(--isi-utama);padding:14px 16px;display:flex;gap:12px;align-items:center;border-bottom:4px solid var(--aksen)}
+header svg{width:34px;height:34px;flex:none;fill:var(--aksen)}
+header div{flex:1}header h1{font-size:1.15rem;margin:0;line-height:1.2}header small{opacity:.85}
+.hbtn{min-height:44px;padding:0 14px;border:1px solid var(--isi-utama);background:transparent;color:var(--isi-utama);border-radius:10px;font:inherit;cursor:pointer}
+nav{display:flex;gap:6px;overflow-x:auto;padding:10px 12px;background:var(--kartu);border-bottom:1px solid var(--garis);position:sticky;top:0;z-index:5}
+nav button{min-height:44px;padding:0 14px;border:1px solid var(--garis);background:transparent;color:var(--teks);border-radius:22px;font:inherit;cursor:pointer;white-space:nowrap}
+nav button[aria-current=page]{background:var(--utama);color:var(--isi-utama);border-color:var(--utama)}
+main{padding:16px}.wrap{max-width:920px;margin:0 auto}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.card{background:var(--kartu);border:1px solid var(--garis);border-radius:14px;padding:16px;margin-bottom:12px}
+.card h2{font-size:1rem;margin:0 0 8px}.lbl{color:var(--redup);font-size:.85rem}
+.big{font-size:1.6rem;font-weight:700}.saldo{background:var(--utama);color:var(--isi-utama);border-color:var(--aksen)}.saldo .lbl{color:inherit;opacity:.85}
+.info{border-left:4px solid var(--aksen);background:var(--kartu);padding:10px 14px;margin-bottom:12px;border-radius:8px;font-size:.9rem;color:var(--redup)}
+.naik{color:var(--naik)}.turun{color:var(--turun)}
+label{display:block;font-size:.9rem;margin:10px 0 4px}
+input,select{width:100%;min-height:44px;padding:8px 10px;border:1px solid var(--garis);border-radius:10px;background:var(--latar);color:var(--teks);font:inherit}
+button.p,button.s{min-height:44px;padding:0 18px;border-radius:10px;font:inherit;cursor:pointer;border:1px solid var(--utama)}
+button.p{background:var(--utama);color:var(--isi-utama)}button.s{background:transparent;color:var(--utama)}
+button.x{min-height:44px;min-width:44px;background:transparent;border:0;color:var(--turun);cursor:pointer;font-size:1.1rem}
+:focus-visible{outline:3px solid var(--aksen);outline-offset:2px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}.row>*{flex:1 1 140px}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:.92rem}
+th,td{padding:8px 6px;text-align:left;border-bottom:1px solid var(--garis);vertical-align:top}th{color:var(--redup);font-weight:600}
+td.n,th.n{text-align:right;white-space:nowrap}.kosong{color:var(--redup);text-align:center;padding:24px 8px}
+.ttd{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:40px;text-align:center}
+dialog{border:1px solid var(--garis);border-radius:14px;background:var(--kartu);color:var(--teks);width:min(92vw,380px)}
+footer{text-align:center;color:var(--redup);font-size:.85rem;padding:20px 16px 32px}
+#cetak{display:none}
+@media print{body{background:#fff;color:#000}header,nav,main,footer,dialog{display:none!important}#cetak{display:block}#cetak *{color:#000!important}}
+</style>
+</head>
+<body>
+<header>
+<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2h4v6h6v4h-6v10h-4V12H4V8h6z"/></svg>
+<div><h1>Keuangan Perpulungan Stefanus</h1><small>Buku kas bendahara</small></div>
+<button class="hbtn" id="masuk" type="button">Masuk bendahara</button>
+</header>
+<nav id="nav" aria-label="Menu utama"></nav>
+<main><div class="wrap" id="hal"></div></main>
+<div id="cetak"></div>
+<dialog id="dlg"><form id="flogin"><h2 style="margin-top:0">Masuk bendahara</h2>
+<label for="em">Email</label><input id="em" type="email" required autocomplete="username">
+<label for="pw">Kata sandi</label><input id="pw" type="password" required autocomplete="current-password">
+<p id="lerr" class="turun" role="alert"></p>
+<div class="row"><button class="p" type="submit">Masuk</button><button class="s" type="button" id="batal">Batal</button></div></form></dialog>
+<footer>Ad maiorem Dei gloriam ✝ Data tersimpan online dan sama untuk semua pengguna.</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+// ===== ISI DUA BARIS INI (lihat PANDUAN.md) =====
+var SUPABASE_URL='GANTI_DENGAN_PROJECT_URL';
+var SUPABASE_KEY='GANTI_DENGAN_ANON_PUBLIC_KEY';
+// ================================================
+var TAB='ringkas',BLN=new Date().toISOString().slice(0,7),sb=null,W=false,tunggu=1,pending=false,galat='',timer=null;
+var S={org:O0(),pos:[],kas:[]};
+var MENU=[['ringkas','Ringkasan'],['kas','Buku Kas'],['pos','Pos'],['laporan','Laporan'],['atur','Pengaturan']];
+var POS0=[['Kolekte Misa','masuk'],['Persembahan Syukur','masuk'],['Dana Sosial dan Diakonia','masuk'],['Sumbangan Umat','masuk'],['Intensi Misa','keluar'],['Kegiatan Rohani','keluar'],['Operasional','keluar'],['Pemeliharaan Gereja','keluar']];
+function O0(){return{org:'Perpulungan Stefanus',alamat:'',kota:'',bendahara:'',ketua:'',saldoAwal:0}}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function rp(n){return (n<0?'-':'')+'Rp '+Math.abs(Math.round(n)).toLocaleString('id-ID')}
+function tgl(t){var a=t.split('-');return a[2]+'/'+a[1]+'/'+a[0]}
+function nmPos(id){var p=S.pos.filter(function(x){return x.id===id})[0];return p?p.nama:'—'}
+function hitung(kas){var m=0,k=0;kas.forEach(function(x){if(x.jenis==='masuk')m+=x.jumlah;else k+=x.jumlah});return{m:m,k:k}}
+function total(){var h=hitung(S.kas);return{m:h.m,k:h.k,saldo:(+S.org.saldoAwal||0)+h.m-h.k}}
+function urut(a){return a.slice().sort(function(x,y){return y.t.localeCompare(x.t)||String(y.dibuat).localeCompare(String(x.dibuat))})}
+function nav(){document.getElementById('nav').innerHTML=MENU.filter(function(m){return W||m[0]!=='atur'}).map(function(m){return'<button data-tab="'+m[0]+'"'+(m[0]===TAB?' aria-current="page"':'')+'>'+m[1]+'</button>'}).join('');document.getElementById('masuk').textContent=W?'Keluar':'Masuk bendahara'}
+function banner(){if(galat)return'<div class="info turun">'+esc(galat)+'</div>';return'<div class="info">'+(W?'Mode bendahara: perubahan yang Anda simpan langsung terlihat oleh semua pengunjung.':'Mode lihat saja: data diperbarui otomatis dari bendahara.')+'</div>'}
+function baris(list){if(!list.length)return'<tr><td colspan="5" class="kosong">Belum ada transaksi.</td></tr>';
+return list.map(function(x){return'<tr><td>'+tgl(x.t)+'</td><td>'+esc(x.ket)+'<div class="lbl">'+esc(nmPos(x.pos))+'</div></td><td class="n naik">'+(x.jenis==='masuk'?rp(x.jumlah):'')+'</td><td class="n turun">'+(x.jenis==='keluar'?rp(x.jumlah):'')+'</td><td>'+(W?'<button class="x" data-hapus="'+esc(x.id)+'" aria-label="Hapus transaksi">✕</button>':'')+'</td></tr>'}).join('')}
+function seed(){return W&&!S.pos.length?'<div class="card"><h2>Pos belum ada</h2><p class="lbl">Pasang pos bawaan (Kolekte, Dana Sosial, Intensi Misa, dan lainnya) agar bisa mulai mencatat.</p><button class="p" data-aksi="seed">Pasang pos bawaan</button></div>':''}
+var R={
+ringkas:function(){var t=total(),b=hitung(S.kas.filter(function(x){return x.t.slice(0,7)===BLN}));
+return seed()+'<div class="card saldo"><div class="lbl">Saldo Kas Saat Ini</div><div class="big">'+rp(t.saldo)+'</div></div>'+
+'<div class="grid"><div class="card"><div class="lbl">Total Pemasukan</div><div class="big naik">'+rp(t.m)+'</div></div><div class="card"><div class="lbl">Total Pengeluaran</div><div class="big turun">'+rp(t.k)+'</div></div><div class="card"><div class="lbl">Saldo Awal</div><div class="big">'+rp(+S.org.saldoAwal||0)+'</div></div></div>'+
+'<div class="card"><h2>Bulan ini</h2>Masuk <b class="naik">'+rp(b.m)+'</b> · Keluar <b class="turun">'+rp(b.k)+'</b></div>'+
+'<div class="card"><h2>Transaksi terbaru</h2><div class="tw"><table><tr><th>Tanggal</th><th>Keterangan</th><th class="n">Masuk</th><th class="n">Keluar</th><th></th></tr>'+baris(urut(S.kas).slice(0,5))+'</table></div></div>'},
+kas:function(){return seed()+(W&&S.pos.length?'<div class="card"><h2>Catat transaksi</h2><form id="fkas"><div class="row"><div><label for="t">Tanggal</label><input id="t" type="date" required value="'+new Date().toISOString().slice(0,10)+'"></div>'+
+'<div><label for="j">Jenis</label><select id="j"><option value="masuk">Pemasukan</option><option value="keluar">Pengeluaran</option></select></div>'+
+'<div><label for="ps">Pos</label><select id="ps"></select></div><div><label for="jm">Jumlah (Rp)</label><input id="jm" type="number" min="1" step="1" required inputmode="numeric"></div></div>'+
+'<label for="kt">Keterangan</label><input id="kt" required placeholder="Contoh: Kolekte Misa Minggu"><p><button class="p" type="submit">Simpan</button></p></form></div>':'')+
+'<div class="card"><h2>Buku Kas</h2><div class="tw"><table><tr><th>Tanggal</th><th>Keterangan</th><th class="n">Masuk</th><th class="n">Keluar</th><th></th></tr>'+baris(urut(S.kas))+'</table></div></div>'},
+pos:function(){return seed()+(W?'<div class="card"><h2>Tambah pos</h2><form id="fpos" class="row"><div><label for="pn">Nama pos</label><input id="pn" required></div><div><label for="pj">Jenis</label><select id="pj"><option value="masuk">Pemasukan</option><option value="keluar">Pengeluaran</option></select></div><div><button class="p" type="submit">Tambah</button></div></form></div>':'')+
+'<div class="card"><h2>Daftar pos</h2><div class="tw"><table>'+(S.pos.length?S.pos.map(function(p){return'<tr><td>'+esc(p.nama)+'</td><td>'+(p.jenis==='masuk'?'Pemasukan':'Pengeluaran')+'</td><td class="n">'+(W?'<button class="x" data-hpos="'+esc(p.id)+'" aria-label="Hapus pos">✕</button>':'')+'</td></tr>'}).join(''):'<tr><td class="kosong">Belum ada pos.</td></tr>')+'</table></div></div>'},
+laporan:function(){return'<div class="card"><div class="row"><div><label for="bl">Periode</label><input id="bl" type="month" value="'+BLN+'"></div><div><button class="p" data-aksi="cetak">Cetak laporan</button></div><div><button class="s" data-aksi="csv">Ekspor CSV</button></div></div></div><div class="card">'+lap()+'</div>'},
+atur:function(){var o=S.org,f=function(id,lb,v,tp){return'<label for="'+id+'">'+lb+'</label><input id="'+id+'" type="'+(tp||'text')+'" value="'+esc(v)+'">'};
+return'<div class="card"><h2>Data organisasi</h2><form id="fatur">'+f('o','Nama perpulungan',o.org)+f('al','Alamat',o.alamat)+f('kt','Kota',o.kota)+f('bd','Nama bendahara',o.bendahara)+f('kg','Nama ketua',o.ketua)+f('sa','Saldo awal (Rp)',o.saldoAwal,'number')+'<p><button class="p" type="submit">Simpan pengaturan</button></p></form></div>'+
+'<div class="card"><h2>Cadangan data</h2><button class="s" data-aksi="backup">Unduh cadangan (JSON)</button></div>'+
+'<div class="card"><h2>Mulai dari nol</h2><p class="lbl">Menghapus semua transaksi untuk semua pengunjung. Saldo kembali ke saldo awal.</p><button class="s" data-aksi="reset">Hapus semua transaksi</button></div>'}};
+function lap(){var o=S.org,a=S.kas.filter(function(x){return!BLN||x.t.slice(0,7)===BLN}).sort(function(x,y){return x.t.localeCompare(y.t)});
+var pre=S.kas.filter(function(x){return BLN&&x.t.slice(0,7)<BLN}),hp=hitung(pre),aw=(+o.saldoAwal||0)+hp.m-hp.k,h=hitung(a);
+var ttl=BLN?new Date(BLN+'-01T00:00').toLocaleDateString('id-ID',{month:'long',year:'numeric'}):'Semua periode';
+return'<div id="isi-lap"><div style="text-align:center"><b>LAPORAN KEUANGAN '+esc(o.org.toUpperCase())+'</b><br>'+esc(o.alamat)+(o.kota?', '+esc(o.kota):'')+'<br>Periode: '+ttl+'</div><div class="tw"><table><tr><td colspan="2"><b>Saldo awal</b></td><td class="n" colspan="3"><b>'+rp(aw)+'</b></td></tr><tr><th>Tanggal</th><th>Keterangan</th><th class="n">Masuk</th><th class="n">Keluar</th><th></th></tr>'+
+(a.length?a.map(function(x){return'<tr><td>'+tgl(x.t)+'</td><td>'+esc(x.ket)+'</td><td class="n">'+(x.jenis==='masuk'?rp(x.jumlah):'')+'</td><td class="n">'+(x.jenis==='keluar'?rp(x.jumlah):'')+'</td><td></td></tr>'}).join(''):'<tr><td colspan="5" class="kosong">Tidak ada transaksi pada periode ini.</td></tr>')+
+'<tr><td colspan="2"><b>Jumlah</b></td><td class="n"><b>'+rp(h.m)+'</b></td><td class="n"><b>'+rp(h.k)+'</b></td><td></td></tr><tr><td colspan="2"><b>Saldo akhir</b></td><td class="n" colspan="3"><b>'+rp(aw+h.m-h.k)+'</b></td></tr></table></div>'+
+'<div class="ttd"><div>Ketua<br><br><br><br><u>'+esc(o.ketua||'……………')+'</u></div><div>Bendahara<br><br><br><br><u>'+esc(o.bendahara||'……………')+'</u></div></div></div>'}
+function gambar(){if(TAB==='atur'&&!W)TAB='ringkas';nav();document.getElementById('hal').innerHTML=banner()+(tunggu>0?'<div class="card kosong">Memuat data…</div>':R[TAB]());if(TAB==='kas'&&W&&S.pos.length&&tunggu<=0)isiPos()}
+function sibuk(){var a=document.activeElement;return a&&/INPUT|SELECT/.test(a.tagName)&&document.getElementById('hal').contains(a)}
+function segar(){if(sibuk()){pending=true;return}gambar()}
+function isiPos(){var j=document.getElementById('j'),s=document.getElementById('ps');if(!j||!s)return;function u(){s.innerHTML=S.pos.filter(function(p){return p.jenis===j.value}).map(function(p){return'<option value="'+esc(p.id)+'">'+esc(p.nama)+'</option>'}).join('')}u();j.onchange=u}
+function cek(r){if(r&&r.error){alert('Gagal menyimpan: '+r.error.message);return false}return true}
+async function muat(){
+ var a=await sb.from('kas').select('*'),b=await sb.from('pos').select('*'),c=await sb.from('config').select('*').eq('id',1).maybeSingle();
+ if(a.error||b.error){galat='Data belum bisa dimuat. Periksa pengaturan Supabase (lihat PANDUAN.md).'}else{galat='';
+  S.kas=a.data.map(function(r){return{id:r.id,t:r.t,jenis:r.jenis,jumlah:+r.jumlah,pos:r.pos_id,ket:r.ket,dibuat:r.created_at}});
+  S.pos=b.data.sort(function(x,y){return x.urut-y.urut||x.nama.localeCompare(y.nama)}).map(function(r){return{id:r.id,nama:r.nama,jenis:r.jenis}});
+  var o=c.data;S.org=o?{org:o.org,alamat:o.alamat,kota:o.kota,bendahara:o.bendahara,ketua:o.ketua,saldoAwal:+o.saldo_awal}:O0()}
+ tunggu=0;segar()}
+function jadwal(){clearTimeout(timer);timer=setTimeout(muat,300)}
+function unduh(nama,isi,tipe){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([isi],{type:tipe}));a.download=nama;a.click()}
+document.addEventListener('click',async function(e){var b=e.target.closest('button');if(!b)return;
+if(b.id==='masuk'){if(W){await sb.auth.signOut()}else{document.getElementById('lerr').textContent='';document.getElementById('dlg').showModal()}return}
+if(b.id==='batal'){document.getElementById('dlg').close();return}
+if(b.dataset.tab){TAB=b.dataset.tab;gambar();return}
+var a=b.dataset.aksi;
+if(a==='cetak'){document.getElementById('cetak').innerHTML=document.getElementById('isi-lap').outerHTML;window.print();return}
+if(a==='csv'){var r=[['Tanggal','Jenis','Pos','Keterangan','Jumlah']].concat(urut(S.kas).map(function(x){return[x.t,x.jenis,nmPos(x.pos),x.ket,x.jumlah]}));
+unduh('kas-perpulungan-stefanus.csv','\ufeff'+r.map(function(l){return l.map(function(c){return'"'+String(c).replace(/"/g,'""')+'"'}).join(',')}).join('\n'),'text/csv');return}
+if(!W)return;
+if(b.dataset.hapus){if(confirm('Hapus transaksi ini?')){cek(await sb.from('kas').delete().eq('id',b.dataset.hapus));muat()}return}
+if(b.dataset.hpos){if(S.kas.some(function(x){return x.pos===b.dataset.hpos}))alert('Pos masih dipakai transaksi, tidak bisa dihapus.');else{cek(await sb.from('pos').delete().eq('id',b.dataset.hpos));muat()}return}
+if(a==='backup')unduh('cadangan-keuangan-stefanus.json',JSON.stringify(S),'application/json');
+if(a==='seed'){cek(await sb.from('pos').insert(POS0.map(function(p,i){return{nama:p[0],jenis:p[1],urut:i}})));muat()}
+if(a==='reset'&&confirm('Hapus SEMUA transaksi untuk semua pengunjung? Tindakan ini tidak bisa dibatalkan.')){cek(await sb.from('kas').delete().not('id','is',null));muat()}});
+document.addEventListener('submit',async function(e){e.preventDefault();var id=e.target.id,v=function(i){return document.getElementById(i).value};
+if(id==='flogin'){var r=await sb.auth.signInWithPassword({email:v('em'),password:v('pw')});if(r.error){document.getElementById('lerr').textContent='Email atau kata sandi salah.'}else{document.getElementById('dlg').close();document.getElementById('pw').value=''}return}
+if(!W)return;
+if(id==='fkas'){if(cek(await sb.from('kas').insert({t:v('t'),jenis:v('j'),jumlah:+v('jm'),pos_id:v('ps'),ket:v('kt').trim()}))){pending=false;muat()}}
+if(id==='fpos'){if(cek(await sb.from('pos').insert({nama:v('pn').trim(),jenis:v('pj'),urut:S.pos.length}))){pending=false;muat()}}
+if(id==='fatur'){if(cek(await sb.from('config').upsert({id:1,org:v('o'),alamat:v('al'),kota:v('kt'),bendahara:v('bd'),ketua:v('kg'),saldo_awal:+v('sa')||0}))){muat();alert('Pengaturan tersimpan.')}}});
+document.addEventListener('change',function(e){if(e.target.id==='bl'){BLN=e.target.value;gambar()}});
+document.addEventListener('focusout',function(){setTimeout(function(){if(pending&&!sibuk()){pending=false;gambar()}},400)});
+(function(){
+ gambar();
+ if(typeof supabase==='undefined'||SUPABASE_URL.indexOf('GANTI')===0){tunggu=0;galat='Situs belum disambungkan ke database. Isi SUPABASE_URL dan SUPABASE_KEY di index.html (lihat PANDUAN.md).';gambar();return}
+ sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+ sb.auth.getSession().then(function(r){W=!!(r.data&&r.data.session);muat()});
+ sb.auth.onAuthStateChange(function(_e,s){W=!!s;segar()});
+ sb.channel('semua').on('postgres_changes',{event:'*',schema:'public'},jadwal).subscribe();
+ document.addEventListener('visibilitychange',function(){if(!document.hidden)jadwal()});
+})();
+</script>
+</body>
+</html>
